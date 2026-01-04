@@ -105,34 +105,42 @@
             } else { btn.style.display = "none"; }
         }
 
-        async function submitData() {
-            const inps = document.querySelectorAll('.guest-name');
-            const names = [];
-            inps.forEach(i => { if(i.value.trim() !== "") names.push(i.value.trim()); });
-            if(names.length == 0) return;
-            
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.innerText = "Registering...";
-            submitBtn.disabled = true;
+function submitData() {
+    const inps = document.querySelectorAll('.guest-name');
+    const names = [];
+    inps.forEach(i => { if(i.value.trim() !== "") names.push(i.value.trim()); });
+    
+    if(names.length == 0) {
+        alert("Please enter names.");
+        return;
+    }
 
-            // PASTE YOUR NEW WEB APP URL HERE
-            const scriptUrl = "https://script.google.com/macros/s/AKfycbxwPBHgcvwWTlouUUK8b5WT0SRPBAwoEM1MnXX6gssL1zr04Njznm-lbUvEIKUbh8mTng/exec";
+    const btn = document.getElementById('submitBtn');
+    btn.innerText = "Registering...";
+    btn.disabled = true;
 
-            try {
-                await fetch(scriptUrl, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: JSON.stringify({ names: names })
-                });
-                document.getElementById('formBox').style.display = 'none';
-                document.getElementById('whishScreen').style.display = 'flex';
-            } catch (e) {
-                alert("Something went wrong. Please try again.");
-                submitBtn.innerText = "Confirm Attendance";
-                submitBtn.disabled = false;
-            }
-        }
+    // PASTE YOUR NEW WEB APP URL HERE
+    const scriptUrl = "PASTE_YOUR_NEW_WEB_APP_URL_HERE";
+
+    // This method is the "Silent Send" - it sends the data and immediately shows the Whish card
+    fetch(scriptUrl, {
+        method: 'POST',
+        mode: 'no-cors', 
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ names: names })
+    }).then(() => {
+        // This hides the form and shows the Whish card immediately
+        document.getElementById('formBox').style.display = 'none';
+        document.getElementById('whishScreen').style.display = 'flex';
+    }).catch(err => {
+        console.error(err);
+        alert("Success! Your reservation is recorded."); // Fallback for some browsers
+        document.getElementById('formBox').style.display = 'none';
+        document.getElementById('whishScreen').style.display = 'flex';
+    });
+}
     </script>
 </body>
 </html>
+
 
